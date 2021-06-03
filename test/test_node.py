@@ -2,6 +2,7 @@ import tree
 import unittest
 from unittest.mock import Mock, PropertyMock, patch
 
+
 class TestNodeInitialize(unittest.TestCase):
     def setUp(self):
         self.node = tree.Node('some value')
@@ -52,6 +53,7 @@ class TestNodeParentSetter(unittest.TestCase):
         self.child2.parent = self.child1
         self.assertNotIn(self.child2, self.parent.children)
 
+
 class TreeNodeAddChild(unittest.TestCase):
     def setUp(self):
         self.child1 = tree.Node('child1')
@@ -98,7 +100,8 @@ class TreeNodeIsSearchable:
         self.nodes = [tree.Node(i) for i in "abcdefg"]
         parent_index = 0
         for index, child in enumerate(self.nodes):
-            if index == 0: continue
+            if index == 0:
+                continue
             child.parent = self.nodes[parent_index]
             parent_index += 1 if index % 2 == 0 else 0
 
@@ -122,6 +125,26 @@ class TreeNodeIsSearchableByDepthFirst(TreeNodeIsSearchable, unittest.TestCase):
         self.nodes[2].depth_search.assert_not_called()
         for i in [0, 1, 3, 4]:
             self.nodes[i].depth_search.assert_called()
+
+
+class TreeNodeIsBreadthFirstSearchable(unittest.TestCase):
+    def setUp(self):
+        self.nodes = [tree.Node(i) for i in "abcdefg"]
+        parent_index = 0
+        for index, child in enumerate(self.nodes):
+            if index == 0:
+                continue
+            child.parent = self.nodes[parent_index]
+            parent_index += 1 if index % 2 == 0 else 0
+
+    def test_should_return_itself_if_it_contains_the_value(self):
+        self.assertEqual(self.nodes[0].breadth_search('a'), self.nodes[0])
+
+    def test_should_find_descendant(self):
+        self.assertEqual(self.nodes[0].breadth_search('g'), self.nodes[-1])
+
+    def test_should_return_None_when_value_not_found(self):
+        self.assertIsNone(self.nodes[0].breadth_search('x'))
 
 
 if __name__ == '__main__':
