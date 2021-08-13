@@ -30,3 +30,4 @@ class Node:
     def parent(self, new_parent):
         self._parent = new_parent
         self.parent.add_child(self)
+        self.parent.remove_child(self)
